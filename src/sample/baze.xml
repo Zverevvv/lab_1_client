@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Books>
+    <Book id="4234">
+        <name>refwe</name>
+        <publisher>wref</publisher>
+        <date>2344</date>
+        <pages>543</pages>
+        <smooth>false</smooth>
+    </Book>
+    <Book id="42">
+        <name>gre</name>
+        <publisher>gre</publisher>
+        <date>234</date>
+        <pages>423</pages>
+        <smooth>true</smooth>
+    </Book>
+    <Book id="242">
+        <name>gfd</name>
+        <publisher>fdg</publisher>
+        <date>54</date>
+        <pages>543</pages>
+        <smooth>false</smooth>
+    </Book>
+    <Book id="54">
+        <name>gerwg</name>
+        <publisher>grwe</publisher>
+        <date>543</date>
+        <pages>45</pages>
+        <smooth>true</smooth>
+    </Book>
+    <Book id="234">
+        <name>fesf</name>
+        <publisher>greg</publisher>
+        <date>543</date>
+        <pages>543</pages>
+        <smooth>false</smooth>
+    </Book>
+    <Book id="4325">
+        <name>аывп</name>
+        <publisher>ЕУ</publisher>
+        <date>545</date>
+        <pages>54</pages>
+        <smooth>false</smooth>
+    </Book>
+</Books>
