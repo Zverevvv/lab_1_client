@@ -1,15 +1,7 @@
 package sample;
 
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -31,6 +23,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Client_and_intf extends Application{
+
+    private Client client;
     
     //Подгружаем иконки для кнопок
     private static final Image ICON_ADD = new Image(Client_and_intf.class.getResourceAsStream("add.png"));
@@ -39,13 +33,10 @@ public class Client_and_intf extends Application{
     private static final Image ICON_EDIT = new Image(Client_and_intf.class.getResourceAsStream("edit.png"));
     private static final Image ICON_REFRESH = new Image(Client_and_intf.class.getResourceAsStream("refresh.png"));
 
-    final ObservableList<Book> data = FXCollections.observableArrayList();
-    Registry reg;
-    IServer rmi;
-
     //То, что будет выполнено при старте приложения
     @Override public void start(Stage primaryStage) throws Exception {
         try{
+            client = new Client();
             //Делаем из них объект ImageView
             ImageView addImageView = new ImageView(ICON_ADD);
             ImageView deleteImageView = new ImageView(ICON_DELETE);
@@ -53,26 +44,8 @@ public class Client_and_intf extends Application{
             ImageView editImageView = new ImageView(ICON_EDIT);
             ImageView refreshImageView = new ImageView(ICON_REFRESH);
 
-            //Ищем сервер и подсоеденяем его
-            reg = LocateRegistry.getRegistry("127.0.0.1", 1099);
-            rmi = (IServer) reg.lookup("server");
-            System.out.println("Connected");
-            String text = rmi.SayHello("Master");
-            //rmi.registry(new Client_and_intf());
-            System.out.println(text);
-
-            //При старте сразу считываем то, что уже храниться в наей базе
-            data.addListener(new ListChangeListener<Book>() {
-                @Override
-                public void onChanged(Change<? extends Book> c) {
-                    //TODO
-                }
-            });
-            List<Book> booklist = new ArrayList<>();
-            booklist=rmi.print();
-            for(int i=0; i<booklist.size();i++){
-                data.add(booklist.get(i));
-            }
+            client.connect(client);
+            client.Update();
             
             //Создаем окошко
             Scene scene = new Scene(new Group());
@@ -123,20 +96,8 @@ public class Client_and_intf extends Application{
             final TableView tableView = new TableView();
 //            tableView.setMaxHeight(300);
             tableView.setMaxWidth(395);
-            tableView.setItems(data);
+            tableView.setItems(client.data);
             tableView.getColumns().addAll(idCol, nameCol, publisherCol, dateCol, pagesCol, smoothCol);
-            
-//            ObservableList<Book> data2 = FXCollections.observableArrayList();
-//            data2 = tableView.getSelectionModel().getSelectedCells();
-//            for(int i=0; i<data2.size();i++){
-//                System.out.print(data2.get(i));
-//            }
-            
-            
-            
-            
-            
-            
 
             //Создаем кнопки
             HBox hBox = new HBox();
@@ -181,13 +142,7 @@ public class Client_and_intf extends Application{
                                     date.clear();
                                     pages.clear();
                                     smooth.clear();
-                                    rmi.AddData(b);
-                                    List<Book> booklist;
-                                    booklist=rmi.print();
-                                    data.clear();
-                                    for(int i=0; i<booklist.size();i++){
-                                        data.add(booklist.get(i));
-                                    }
+                                    client.addData(b);
                                 }catch (NumberFormatException e){
                                     
                                     
@@ -208,8 +163,6 @@ public class Client_and_intf extends Application{
                                     
 //                                    
 //                                    System.err.println("NaN! Try again!");
-                                }catch (RemoteException ex) {
-                                    Logger.getLogger(Client_and_intf.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                                 dialog.close();
                             }
@@ -244,16 +197,7 @@ public class Client_and_intf extends Application{
                             data2 = tableView.getSelectionModel().getSelectedCells();
                             index = data2.get(0).getRow();
                             
-                            
-                            List<Book> booklist;
-                            booklist=rmi.print();
-                            rmi.DeleteData(booklist.get(index).getId());
-                            
-                            booklist=rmi.print();
-                            data.clear();
-                            for(int i=0; i<booklist.size();i++){
-                                data.add(booklist.get(i));
-                            }
+                            client.deleteDate(client.data.get(index).getId());
 
                     }catch(Exception e){
                         final Stage error = new Stage();
@@ -300,24 +244,11 @@ public class Client_and_intf extends Application{
                         okDialogButton.setOnAction(new EventHandler<ActionEvent>() {
                             @Override public void handle(ActionEvent event) {
                                 try {
-                                    List<Book> booklist = new ArrayList<>();
-                                    if (cb.getValue()=="Name")
-                                        booklist = rmi.search(number.getText(), 1);
-                                    if (cb.getValue()=="Publisher")
-                                        booklist = rmi.search(number.getText(), 2);
-                                    if (cb.getValue()=="Date")
-                                        booklist = rmi.search(number.getText(), 3);
-                                    if (cb.getValue()=="Pages")
-                                        booklist = rmi.search(number.getText(), 4);
+                                    client.data.clear();
+                                    client.data.addAll(client.search(cb.getValue().toString(), number.getText()));
                                     number.clear();
-                                    data.clear();
-                                    for(int i=0; i<booklist.size();i++){
-                                        data.add(booklist.get(i));
-                                    }
                                 }catch (NumberFormatException e){
                                     System.err.println("NaN! Try again!");
-                                } catch (RemoteException ex) {
-                                    Logger.getLogger(Client_and_intf.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                                 dialog.close();
                             }
@@ -348,13 +279,13 @@ public class Client_and_intf extends Application{
                         @Override public void handle(ActionEvent event) {
                             try{
                                 final int index;
-                            ObservableList<TablePosition> data2 = FXCollections.observableArrayList();
+                            ObservableList<TablePosition> data2;
                             data2 = tableView.getSelectionModel().getSelectedCells();
                             index = data2.get(0).getRow();
                             
                             
-                            List<Book> booklist;
-                            booklist=rmi.print();
+                            /*List<Book> booklist;
+                            booklist=rmi.print();*/
                             
                             
                             
@@ -365,17 +296,17 @@ public class Client_and_intf extends Application{
 
                                 //Стоблец с полями для ввода
                                 VBox vBox = new VBox(); 
-                                final TextField id = new TextField(String.valueOf(booklist.get(index).getId()));
+                                final TextField id = new TextField(String.valueOf(client.data.get(index).getId()));
                                 id.setPromptText("Enter id");
-                                final TextField name = new TextField(booklist.get(index).getName());
+                                final TextField name = new TextField(client.data.get(index).getName());
                                 name.setPromptText("Enter name");
-                                final TextField publisher = new TextField(booklist.get(index).getPublisher());
+                                final TextField publisher = new TextField(client.data.get(index).getPublisher());
                                 publisher.setPromptText("Enter publisher");
-                                final TextField date = new TextField(String.valueOf(booklist.get(index).getDate()));
+                                final TextField date = new TextField(String.valueOf(client.data.get(index).getDate()));
                                 date.setPromptText("Enter date");
-                                final TextField pages = new TextField(String.valueOf(booklist.get(index).getPages()));
+                                final TextField pages = new TextField(String.valueOf(client.data.get(index).getPages()));
                                 pages.setPromptText("Enter number of pages");
-                                final TextField smooth = new TextField(String.valueOf(booklist.get(index).getSmooth()));
+                                final TextField smooth = new TextField(String.valueOf(client.data.get(index).getSmooth()));
                                 smooth.setPromptText("Is it smooth?");
                                 vBox.getChildren().addAll(id, name, publisher, date, pages, smooth);
 
@@ -394,20 +325,10 @@ public class Client_and_intf extends Application{
                                             smooth.clear();
                                             
                                             
-                                            rmi.edit(index, b);
-                                            
-                                            
-                                            
-                                            List<Book> booklist;
-                                            booklist=rmi.print();
-                                            data.clear();
-                                            for(int i=0; i<booklist.size();i++){
-                                                data.add(booklist.get(i));
-                                            }
+                                            client.edit(index, b);
+
                                         }catch (NumberFormatException e){
                                             System.err.println("NaN! Try again!");
-                                        }catch (RemoteException ex) {
-                                            Logger.getLogger(Client_and_intf.class.getName()).log(Level.SEVERE, null, ex);
                                         }
                                         dialog.close();
                                     }
@@ -453,12 +374,7 @@ public class Client_and_intf extends Application{
             refreshButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override public void handle(ActionEvent event) {
                     try{
-                        List<Book> booklist = new ArrayList<>();
-                        booklist=rmi.print();
-                        data.clear();
-                        for(int i=0; i<booklist.size();i++){
-                            data.add(booklist.get(i));
-                        }
+                        client.Update();
                     }catch(Exception e){
                         e.printStackTrace();
                     }
@@ -480,9 +396,14 @@ public class Client_and_intf extends Application{
         }
     }
 
+    @Override
+    public void stop(){
+        client.disconnetc(client);
+    }
+
     public static void main(String[] args) throws Exception{
         launch(args);
-        Client client = new Client();
+        //Client client = new Client();
     }
 
     /*@Override

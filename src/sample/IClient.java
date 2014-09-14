@@ -1,10 +1,8 @@
 package sample;
 
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 
-/**
- * Created by Василий on 12.09.2014.
- */
 public interface IClient extends Remote{
-    void Update();
+    void Update() throws RemoteException;
 }

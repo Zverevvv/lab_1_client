@@ -30,6 +30,8 @@ import java.util.List;
 
 //UnicastRemoteObject
 public class Xmlserver extends UnicastRemoteObject implements IServer {
+
+    public ArrayList<IClient> clients = new ArrayList<>();
     
     public Xmlserver() throws RemoteException{
         super();
@@ -168,7 +170,9 @@ public class Xmlserver extends UnicastRemoteObject implements IServer {
     public void AddData(Book ex){
         System.out.println("Object get");
         try{
-            Domwrite(ex);    
+            Domwrite(ex);
+            for(IClient c: clients)
+                c.Update();
         }catch (Exception e){
             System.out.println(e);
         }
@@ -196,6 +200,12 @@ public class Xmlserver extends UnicastRemoteObject implements IServer {
         }
         if (bool){
             System.out.println("Object sucsseccfuly deleted");
+            try {
+                for(IClient c: clients)
+                    c.Update();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
             return true;
         }
         else{
@@ -248,6 +258,18 @@ public class Xmlserver extends UnicastRemoteObject implements IServer {
         return found;
     }
 
+    @Override
+    public void registry(IClient client) {
+        clients.add(client);
+        System.out.println(this.clients.toString());
+    }
+
+    @Override
+    public void unregistry(IClient client) throws RemoteException {
+        clients.remove(client);
+        System.out.println(this.clients.toString());
+    }
+
     public void edit(int id, Book book){
         try{
         DOMParser parser = new DOMParser();
@@ -280,6 +302,9 @@ public class Xmlserver extends UnicastRemoteObject implements IServer {
         format.setIndenting(true);
         XMLSerializer serializer = new XMLSerializer(new FileOutputStream(new File("src/sample/baze.xml")), format);
         serializer.serialize(doc);
+
+            for(IClient c: clients)
+                c.Update();
                 
         }catch(Exception e){
             e.printStackTrace();

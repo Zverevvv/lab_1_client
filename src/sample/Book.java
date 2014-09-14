@@ -1,13 +1,13 @@
 package sample;
 
 import java.io.Serializable;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 
 public class Book implements Serializable{
+
     private String name, publisher;
     private int id, date, pages;
     private boolean smooth;
+
     Book(int id, String name, String publisher, int date, int pages, boolean smooth){
         this.id = id;
         this.name = name;
@@ -40,7 +40,7 @@ public class Book implements Serializable{
     public String getPublisher(){
         return publisher;
     }
-    
+
     public void setDate(int date){
         this.date = date;
     }
@@ -63,5 +63,17 @@ public class Book implements Serializable{
     
     public boolean getSmooth(){
         return smooth;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "name='" + name + '\'' +
+                ", publisher='" + publisher + '\'' +
+                ", id=" + id +
+                ", date=" + date +
+                ", pages=" + pages +
+                ", smooth=" + smooth +
+                '}';
     }
 }
