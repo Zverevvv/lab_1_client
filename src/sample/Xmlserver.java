@@ -14,6 +14,8 @@ package sample;/*
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -38,12 +40,12 @@ public class Xmlserver extends UnicastRemoteObject implements IServer {
     }
     
  
-    public static List<Book> Domread() throws Exception{
+    public static ArrayList<Book> Domread() throws Exception{
         DOMParser parser = new DOMParser();
         parser.parse("src/sample/baze.xml");
         Document document = parser.getDocument();
-        
-        List<Book> booklist = new ArrayList<>();
+
+        ArrayList<Book> booklist = new ArrayList<>();
         
         NodeList nodeList = document.getDocumentElement().getChildNodes();
         
@@ -155,17 +157,10 @@ public class Xmlserver extends UnicastRemoteObject implements IServer {
 //        System.out.printf(child.item(0).getAttributes().getNamedItem("id").getNodeValue());
         return false;
     }
-//    public static ServerSocket listener;
-//    public static ObjectInputStream deserializer;
-//    public static ObjectOutputStream serializer;
     
     
     public static List<Book> arrayList = new ArrayList<Book>();
-    
-    public String SayHello(String text) throws RemoteException{
-        text = "Hi " + text;
-        return text;
-    }
+
     
     public void AddData(Book ex){
         System.out.println("Object get");
@@ -180,7 +175,7 @@ public class Xmlserver extends UnicastRemoteObject implements IServer {
     } 
    
     
-    public List<Book> print(){
+    public ArrayList<Book> print(){
         try{
             System.out.println("Object sucsseccfuly sent");
             return Domread();    

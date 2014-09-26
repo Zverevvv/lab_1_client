@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.collections.ObservableList;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -7,11 +9,9 @@ import java.util.List;
 
 public interface IServer extends Remote{
 
-    public String SayHello(String text) throws RemoteException;
-
     public void AddData(Book ex) throws RemoteException;
 
-    public List<Book> print() throws RemoteException;
+    public ArrayList<Book> print() throws RemoteException;
 
     public boolean DeleteData(int kol) throws RemoteException;
 

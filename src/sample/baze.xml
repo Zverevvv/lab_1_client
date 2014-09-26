@@ -14,24 +14,10 @@
         <pages>345</pages>
         <smooth>true</smooth>
     </Book>
-    <Book id="432">
-        <name>gwre</name>
-        <publisher>gre</publisher>
-        <date>53</date>
-        <pages>543</pages>
-        <smooth>false</smooth>
-    </Book>
     <Book id="234">
         <name>rter</name>
         <publisher>tre</publisher>
         <date>534</date>
-        <pages>53</pages>
-        <smooth>false</smooth>
-    </Book>
-    <Book id="543">
-        <name>ter</name>
-        <publisher>ter</publisher>
-        <date>543</date>
         <pages>53</pages>
         <smooth>false</smooth>
     </Book>
@@ -40,6 +26,27 @@
         <publisher>gr</publisher>
         <date>423</date>
         <pages>423</pages>
+        <smooth>true</smooth>
+    </Book>
+    <Book id="423">
+        <name>fw</name>
+        <publisher>gre</publisher>
+        <date>423</date>
+        <pages>2324</pages>
+        <smooth>true</smooth>
+    </Book>
+    <Book id="423">
+        <name>ewf</name>
+        <publisher>gre</publisher>
+        <date>42</date>
+        <pages>423</pages>
+        <smooth>false</smooth>
+    </Book>
+    <Book id="543">
+        <name>gre</name>
+        <publisher>ht</publisher>
+        <date>34</date>
+        <pages>654</pages>
         <smooth>true</smooth>
     </Book>
 </Books>

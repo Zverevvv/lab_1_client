@@ -13,7 +13,7 @@ import java.util.ArrayList;
 //UnicastRemoteObject
 class Client extends UnicastRemoteObject implements IClient{
 
-    final static ObservableList<Book> data = FXCollections.observableArrayList();
+    static ObservableList<Book> data = FXCollections.observableArrayList();
     Registry reg;
     IServer rmi;
 
@@ -47,8 +47,9 @@ class Client extends UnicastRemoteObject implements IClient{
 
     public void addData(Book b){
         try {
+            data.add(b);
             rmi.AddData(b);
-        } catch (RemoteException e) {
+        }catch (RemoteException e) {
             e.printStackTrace();
         }
     }
@@ -87,22 +88,3 @@ class Client extends UnicastRemoteObject implements IClient{
         data.addAll(rmi.print());
     }
 }
-
-/*public class Client{
-    public static void main(String[] args){
-        try {
-            logic test = new logic();
-            test.connect(test);
-            test.Update();
-            test.print();
-            Thread.sleep(5000);
-            test.deleteDate(54);
-            test.print();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-    }
-}*/

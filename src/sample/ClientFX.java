@@ -22,16 +22,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class Client_and_intf extends Application{
+public class ClientFX extends Application{
 
     private Client client;
     
     //Подгружаем иконки для кнопок
-    private static final Image ICON_ADD = new Image(Client_and_intf.class.getResourceAsStream("add.png"));
-    private static final Image ICON_DELETE = new Image(Client_and_intf.class.getResourceAsStream("delete.png"));
-    private static final Image ICON_FIND = new Image(Client_and_intf.class.getResourceAsStream("find.png"));
-    private static final Image ICON_EDIT = new Image(Client_and_intf.class.getResourceAsStream("edit.png"));
-    private static final Image ICON_REFRESH = new Image(Client_and_intf.class.getResourceAsStream("refresh.png"));
+    private static final Image ICON_ADD = new Image(ClientFX.class.getResourceAsStream("add.png"));
+    private static final Image ICON_DELETE = new Image(ClientFX.class.getResourceAsStream("delete.png"));
+    private static final Image ICON_FIND = new Image(ClientFX.class.getResourceAsStream("find.png"));
+    private static final Image ICON_EDIT = new Image(ClientFX.class.getResourceAsStream("edit.png"));
+    private static final Image ICON_REFRESH = new Image(ClientFX.class.getResourceAsStream("refresh.png"));
 
     //То, что будет выполнено при старте приложения
     @Override public void start(Stage primaryStage) throws Exception {
@@ -60,18 +60,6 @@ public class Client_and_intf extends Application{
             nameCol.setText("Name");
             nameCol.setMinWidth(100);
             nameCol.setCellValueFactory(new PropertyValueFactory("name"));
-//            nameCol.setCellFactory(TextFieldTableCell.forTableColumn());
-//            nameCol.setOnEditCommit(
-//                new EventHandler<CellEditEvent<Book, String>>() {
-//                @Override
-//                public void handle(CellEditEvent<Book, String> t) {
-//                    ((Book) t.getTableView().getItems().get(
-//                    t.getTablePosition().getRow())
-//                    ).setName(t.getNewValue());
-//                    
-//            }
-//        }
-//    );
 
             TableColumn publisherCol = new TableColumn();
             publisherCol.setMinWidth(100);
@@ -94,7 +82,6 @@ public class Client_and_intf extends Application{
             smoothCol.setCellValueFactory(new PropertyValueFactory("smooth"));
 
             final TableView tableView = new TableView();
-//            tableView.setMaxHeight(300);
             tableView.setMaxWidth(395);
             tableView.setItems(client.data);
             tableView.getColumns().addAll(idCol, nameCol, publisherCol, dateCol, pagesCol, smoothCol);
@@ -279,16 +266,10 @@ public class Client_and_intf extends Application{
                         @Override public void handle(ActionEvent event) {
                             try{
                                 final int index;
-                            ObservableList<TablePosition> data2;
-                            data2 = tableView.getSelectionModel().getSelectedCells();
-                            index = data2.get(0).getRow();
-                            
-                            
-                            /*List<Book> booklist;
-                            booklist=rmi.print();*/
-                            
-                            
-                            
+                                ObservableList<TablePosition> data2;
+                                data2 = tableView.getSelectionModel().getSelectedCells();
+                                index = data2.get(0).getRow();
+
                                 final Stage dialog = new Stage();
 
                                 VBox box = new VBox();
@@ -383,8 +364,6 @@ public class Client_and_intf extends Application{
             hBox.getChildren().add(refreshButton);
 
             VBox vBox = new VBox();
-//            vBox.setSpacing(5);
-//            vBox.setPadding(new Insets(10, 0, 0, 10));
             vBox.getChildren().addAll(hBox, tableView);
 
             ((Group) scene.getRoot()).getChildren().addAll(vBox);
@@ -403,20 +382,5 @@ public class Client_and_intf extends Application{
 
     public static void main(String[] args) throws Exception{
         launch(args);
-        //Client client = new Client();
     }
-
-    /*@Override
-    public void Update() {
-        try{
-            List<Book> booklist = new ArrayList<>();
-            booklist=rmi.print();
-            data.clear();
-            for(int i=0; i<booklist.size();i++){
-                data.add(booklist.get(i));
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }*/
 }
